@@ -1,12 +1,13 @@
 import { ethers } from "ethers"
 //Modify this to your contract 
-import lock from "../../artifacts/contracts/Lock.sol/Lock.json"
+import lock from "../../artifacts/contracts/LineControl.sol/LineControl.json"
 
 export enum WalletConnectionStatus{
     waiting, success, missingWallet, declined
 }
 
 export class WalletConnection {
+    
     contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
     contract?:ethers.Contract;
     provider?:ethers.BrowserProvider; 
@@ -30,4 +31,18 @@ export class WalletConnection {
             return WalletConnectionStatus.missingWallet
         }
     }
+
+    async sendStudents(students:string[], studentsSent:()=>void){
+
+    console.log(this.contract);
+            
+        await this.contract?.sendStudents(students)
+        studentsSent()
+    }
+
+    async finalizedStudent(student: string, finalized: () => void) {
+        await this.contract!.finalize(student);
+        finalized();
+    };
+    
 }
